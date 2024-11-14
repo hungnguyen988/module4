@@ -1,10 +1,10 @@
 package com.example.test_thymeleaf.model;
 
 public class Product {
-    public int id;
-    public String name;
-    public double price;
-    public String description;
+    private int id;
+    private String name;
+    private double price;
+    private String description;
 
     public Product() {
     }

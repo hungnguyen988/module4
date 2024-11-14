@@ -40,10 +40,10 @@ public class ProductRepository implements IProductRepository {
     @Override
     public void update(Product productNew) {
         for (Product product : products) {
-            if (product.getId() == productNew.id) {
-                product.setName(productNew.name);
-                product.setPrice(productNew.price);
-                product.setDescription(productNew.description);
+            if (product.getId() == productNew.getId()) {
+                product.setName(productNew.getName());
+                product.setPrice(productNew.getPrice());
+                product.setDescription(productNew.getDescription());
                 break;
             }
         }
