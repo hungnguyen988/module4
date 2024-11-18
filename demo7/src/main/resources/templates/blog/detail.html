@@ -12,6 +12,8 @@
         <div class="card-body">
             <!-- Blog ID -->
             <h6 class="card-subtitle mb-3 text-muted">ID: <span th:text="${blog.id}"></span></h6>
+            <span th:text="${blog.createdAt}"></span>|
+            <span th:text="${blog.getCategory() != null ? blog.getCategory().getName() : 'No Category'}"></span>
             <!-- Blog Title -->
             <h2 class="card-title" th:text="${blog.title}"></h2>
             <!-- Blog Content -->

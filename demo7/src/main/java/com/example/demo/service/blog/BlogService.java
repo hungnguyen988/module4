@@ -1,9 +1,12 @@
-package com.example.demo.service;
+package com.example.demo.service.blog;
 
 import com.example.demo.model.Blog;
-import com.example.demo.repository.IBlogRepository;
+import com.example.demo.model.Category;
+import com.example.demo.repository.blog.IBlogRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,12 +40,20 @@ public class BlogService implements IBlogService {
     }
 
     @Override
-    public void update(Blog blog) {
-    }
-
-    @Override
     public List<Blog> searchByTitle(String title) {
 //        return blogRepository.searchByTitleContaining(title);
         return blogRepository.searchByName("%" + title + "%");
     }
+
+    @Override
+    public Page<Blog> searchByTitlePagingAndSorting(String title, Pageable pageable) {
+        return blogRepository.findAllByTitleContaining(title, pageable);
+    }
+
+    @Override
+    public Page<Blog> findAllByCategory(Category category, Pageable pageable) {
+        return blogRepository.findAllByCategory(category, pageable);
+    }
+
+
 }

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog cá nhân</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item" th:each="category : ${categories}">
+                    <a class="nav-link" th:href="@{/blog/searchByCategory(categoryId=${category.id})}"
+                       th:text="${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <button id="toggleFormButton" class="btn btn-primary mb-3">Thêm danh mục</button>
+
+    <!-- Form thêm danh mục, mặc định ẩn -->
+    <div id="addCategoryForm" style="display: none;">
+        <form action="/category/add" method="post" th:object="${category}">
+            <div class="form-group">
+                <label for="categoryName">Tên danh mục:</label>
+                <input type="text" id="categoryName" name="name"  class="form-control" placeholder="Nhập tên danh mục">
+            </div>
+            <button type="submit" class="btn btn-success">Lưu</button>
+            <button type="button" id="cancelButton" class="btn btn-secondary">Hủy</button>
+        </form>
+    </div>
+
+    <!-- Nút hiển thị form xóa danh mục -->
+    <button id="toggleDeleteFormButton" class="btn btn-danger mb-3">Xóa danh mục</button>
+
+    <!-- Form xóa danh mục, mặc định ẩn -->
+    <div id="deleteCategoryForm" style="display: none;">
+        <form action="/category/delete" method="post">
+            <div class="form-group">
+                <label for="categoryId">Chọn danh mục để xóa:</label>
+                <select id="categoryId" name="id" class="form-control">
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">
+                    </option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <button type="button" id="cancelDeleteButton" class="btn btn-secondary">Hủy</button>
+        </form>
+    </div>
+
+
+
+
+    <h1 class="mb-4">Blog cá nhân</h1>
+
+    <form action="/blog" method="get">
+        <input type="text" name="searchTitle">
+        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </form>
+
+    <!-- Button to add a new blog -->
+    <a href="/blog/add" class="btn btn-primary mb-3">Thêm mới blog</a>
+
+    <div th:each="blog, status : ${blogs.content}" class="card mb-4">
+        <div class="card-body">
+            <!-- Blog number -->
+            <h6 class="card-subtitle mb-2 text-muted">Blog number: <span th:text="${status.count}"></span></h6>
+            <span th:text="${blog.createdAt}"></span>|
+            <span th:text="${blog.getCategory() != null ? blog.getCategory().getName() : 'No Category'}"></span>
+
+            <!-- Blog title -->
+            <h2 class="card-title" th:text="${blog.title}"></h2>
+            <!-- Blog content -->
+            <p class="card-text" th:text="${blog.content}"></p>
+
+            <!-- Action buttons -->
+            <a th:href="@{/blog/detail(id=${blog.id})}" class="btn btn-info btn-sm">Chi tiết</a>
+            <a th:href="@{/blog/edit(id=${blog.id})}" class="btn btn-warning btn-sm">Cập nhật</a>
+            <a th:href="@{/blog/delete(id=${blog.id})}" class="btn btn-danger btn-sm">Xóa</a>
+        </div>
+    </div>
+
+
+    <a th:if="${blogs.hasPrevious()}" th:href="@{/blog(page=${blogs.number - 1},search=${searchTitle})}">Pre</a>
+    <span th:text="${blogs.number +1}"></span>/<span th:text="${blogs.totalPages}"></span>
+    <a th:if="${blogs.hasNext()}" th:href="@{/blog(page=${blogs.number +1 },search=${searchTitle})}">Next</a>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleButton = document.getElementById("toggleFormButton");
+        const addCategoryForm = document.getElementById("addCategoryForm");
+        const cancelButton = document.getElementById("cancelButton");
+
+        // Hiển thị form khi nhấn nút "Thêm danh mục"
+        toggleButton.addEventListener("click", function () {
+            addCategoryForm.style.display = (addCategoryForm.style.display === "none") ? "block" : "none";
+        });
+
+        // Ẩn form khi nhấn nút "Hủy"
+        cancelButton.addEventListener("click", function () {
+            addCategoryForm.style.display = "none";
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleDeleteButton = document.getElementById("toggleDeleteFormButton");
+        const deleteCategoryForm = document.getElementById("deleteCategoryForm");
+        const cancelDeleteButton = document.getElementById("cancelDeleteButton");
+
+        // Hiển thị form khi nhấn nút "Xóa danh mục"
+        toggleDeleteButton.addEventListener("click", function () {
+            deleteCategoryForm.style.display = (deleteCategoryForm.style.display === "none") ? "block" : "none";
+        });
+
+        // Ẩn form khi nhấn nút "Hủy"
+        cancelDeleteButton.addEventListener("click", function () {
+            deleteCategoryForm.style.display = "none";
+        });
+    });
+</script>
+
+
+<!-- Bootstrap JS, Popper.js, and jQuery (optional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
