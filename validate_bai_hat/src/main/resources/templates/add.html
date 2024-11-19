@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/save" method="post" th:object="${songDTO}">
+    Name:<br>
+    <input type="text" th:field="*{name}"><br>
+    <small style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small><br>
+    Artist:<br>
+    <input type="text" th:field="*{artist}"><br>
+    <small style="color: red" th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></small><br>
+    Genre:<br>
+    <input type="text" th:field="*{genre}"><br>
+    <small style="color: red" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></small><br>
+    <input type="submit" value="Save">
+</form>
+</body>
+</html>

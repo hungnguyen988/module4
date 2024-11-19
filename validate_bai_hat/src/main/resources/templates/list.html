@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>STT</th>
+        <th> Name</th>
+        <th>Name Artist</th>
+        <th>Genre</th>
+
+    </tr>
+    <tr th:each="song,status:${songs}">
+        <td th:text="${status.count}"></td>
+        <td th:text="${song.name}"></td>
+        <td th:text="${song.artist}"></td>
+        <td th:text="${song.genre}"></td>
+    </tr>
+</table>
+</body>
+</html>
