@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Book</title>
+</head>
+<body>
+<h1>Return Book</h1>
+<form action="/books/return" method="post">
+    <label for="code">Enter Borrow Code:</label>
+    <input type="text" name="code" id="code" required>
+    <button type="submit">Return</button>
+</form>
+</body>
+</html>
