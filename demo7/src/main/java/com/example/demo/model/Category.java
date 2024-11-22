@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,6 +20,7 @@ public class Category {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Blog> blogs;
 }
