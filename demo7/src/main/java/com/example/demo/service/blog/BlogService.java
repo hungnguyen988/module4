@@ -16,10 +16,13 @@ public class BlogService implements IBlogService {
     @Autowired
     private IBlogRepository blogRepository;
 
-
     @Override
-    public Page<Blog> findAll(Pageable pageable) {
-        return blogRepository.findAll(pageable);
+    public Page<Blog> findAllWithTitleFilter(String title, Pageable pageable) {
+        if (title != null && !title.isEmpty()) {
+            return blogRepository.findAllByTitleContaining(title, pageable);
+        } else {
+            return blogRepository.findAll(pageable);
+        }
     }
 
     @Override
@@ -45,10 +48,6 @@ public class BlogService implements IBlogService {
         return blogRepository.searchByName("%" + title + "%");
     }
 
-    @Override
-    public Page<Blog> searchByTitlePagingAndSorting(String title, Pageable pageable) {
-        return blogRepository.findAllByTitleContaining(title, pageable);
-    }
 
     @Override
     public Page<Blog> findAllByCategory(Category category, Pageable pageable) {

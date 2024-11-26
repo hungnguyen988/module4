@@ -26,12 +26,6 @@ public class BlogController {
     @Autowired
     private ICategoryService categoryService;
 
-//    @GetMapping("")
-//    public String getAllBlogs(Model model) {
-//        model.addAttribute("blogs",  blogService.findAll());;
-//        return "blog/list";
-//    }
-
     @GetMapping("/delete")
     public String deleteBlog(@RequestParam long id, RedirectAttributes redirectAttributes) {
         blogService.deleteById(id);
@@ -68,19 +62,13 @@ public class BlogController {
         return "blog/save";
     }
 
-//    @PostMapping("/search")
-//    public String searchBlog(@RequestParam("search") String title , Model model) {
-//        model.addAttribute("blogs", blogService.searchByTitle(title));
-//        return "blog/list";
-//    }
-
     @GetMapping("")
     public String getAllBlogs(@RequestParam(required = false, defaultValue = "0") int page,
                               @RequestParam(required = false, defaultValue = "") String searchTitle,
                               Model model) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.DESC, "title"));
         Pageable pageable = PageRequest.of(page, 2, sort);
-        Page<Blog> blogs = blogService.searchByTitlePagingAndSorting(searchTitle, pageable);
+        Page<Blog> blogs = blogService.findAllWithTitleFilter( searchTitle,  pageable);
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("blogs", blogs);
         model.addAttribute("searchTitle", searchTitle);

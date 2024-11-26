@@ -6,26 +6,58 @@ import com.example.demo.service.blog.IBlogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/blog")
 public class RestBlogController {
     @Autowired
     private IBlogService blogService;
 
     @GetMapping("")
-    public ResponseEntity<Page<Blog>> getAllBlogs(Pageable pageable) {
-        Page<Blog> blogs = blogService.findAll(pageable);
-        if (blogs.isEmpty()) {
+    public ResponseEntity<?> getBlogs(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+
+        int defaultPage = 0;
+        int defaultSize = 5;
+
+        int currentPage = (page != null) ? page : defaultPage;
+        int currentSize = (size != null) ? size : defaultSize;
+
+        Pageable pageable = PageRequest.of(currentPage, currentSize);
+        Page<Blog> blogPage;
+
+        blogPage = blogService.findAllWithTitleFilter(title,pageable);
+
+        if (blogPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(blogs, HttpStatus.OK);
         }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", blogPage.getContent());
+        response.put("currentPage", blogPage.getNumber());
+        response.put("totalItems", blogPage.getTotalElements());
+        response.put("totalPages", blogPage.getTotalPages());
+        response.put("size", blogPage.getSize());
+        response.put("first", blogPage.isFirst());
+        response.put("last", blogPage.isLast());
+        response.put("sort", blogPage.getSort());
+
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @PostMapping("")
     public ResponseEntity<?> saveBlog(@RequestBody BlogDTO blogDTO) {
@@ -35,7 +67,7 @@ public class RestBlogController {
         return new ResponseEntity<>("add success",HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/searchById/{id}")
     public ResponseEntity<?> getBlogById(@PathVariable Long id) {
         Blog blog = blogService.findById(id);
         if (blog == null) {
@@ -44,6 +76,8 @@ public class RestBlogController {
             return new ResponseEntity<>(blog, HttpStatus.OK);
         }
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
