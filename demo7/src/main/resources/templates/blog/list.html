@@ -17,45 +17,53 @@
             <ul class="navbar-nav">
                 <li class="nav-item" th:each="category : ${categories}">
                     <a class="nav-link" th:href="@{/blog/searchByCategory(categoryId=${category.id})}"
-                       th:text="${category.name}"></a>
+                       th:text="#{'category.' + ${#strings.replace(category.name, ' ', '_')}}"></a>
                 </li>
             </ul>
         </div>
     </nav>
-    <button id="toggleFormButton" class="btn btn-primary mb-3">Thêm danh mục</button>
+    <a th:href="@{/blog(lang=en)}">EN</a>
+    <a th:href="@{/blog(lang=vi)}">VI</a>
+
+    <button id="toggleFormButton" class="btn btn-primary mb-3" th:text="#{category.add}"></button>
 
     <!-- Form thêm danh mục, mặc định ẩn -->
     <div id="addCategoryForm" style="display: none;">
         <form action="/category/add" method="post" th:object="${category}">
             <div class="form-group">
-                <label for="categoryName">Tên danh mục:</label>
-                <input type="text" id="categoryName" name="name" class="form-control" placeholder="Nhập tên danh mục">
+                <label for="categoryName" th:text="#{category.nameToAdd}"></label>
+                <input type="text" id="categoryName" name="name" class="form-control" th:placeholder="#{categoryToAdd}">
             </div>
-            <button type="submit" class="btn btn-success">Lưu</button>
-            <button type="button" id="cancelButton" class="btn btn-secondary">Hủy</button>
+            <button type="submit" class="btn btn-success" th:text="#{save}"></button>
+            <button type="button" id="cancelButton" class="btn btn-secondary" th:text="#{cancle}"></button>
         </form>
     </div>
 
     <!-- Nút hiển thị form xóa danh mục -->
-    <button id="toggleDeleteFormButton" class="btn btn-danger mb-3">Xóa danh mục</button>
+    <button id="toggleDeleteFormButton" class="btn btn-danger mb-3" th:text="#{category.delete}"></button>
 
     <!-- Form xóa danh mục, mặc định ẩn -->
     <div id="deleteCategoryForm" style="display: none;">
         <form action="/category/delete" method="post">
             <div class="form-group">
-                <label for="categoryId">Chọn danh mục để xóa:</label>
+                <label for="categoryId" th:text="#{categoryToDelete}"></label>
                 <select id="categoryId" name="id" class="form-control">
-                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">
+<!--                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">-->
+<!--                    </option>-->
+
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="#{'category.' + ${#strings.replace(category.name, ' ', '_')}}">
                     </option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-danger">Xóa</button>
-            <button type="button" id="cancelDeleteButton" class="btn btn-secondary">Hủy</button>
+            <button type="submit" class="btn btn-danger" th:text="#{blog.delete}"></button>
+            <button type="button" id="cancelDeleteButton" class="btn btn-secondary" th:text="#{cancle}"></button>
         </form>
     </div>
 
 
-    <h1 class="mb-4">Blog cá nhân</h1>
+    <h1 class="mb-4" th:text="#{titlePage}"></h1>
 
     <!--    <form action="/blog" method="get">-->
     <!--        <input type="text" name="searchTitle">-->
@@ -63,7 +71,7 @@
     <!--    </form>-->
 
     <!-- Button to add a new blog -->
-    <a href="/blog/add" class="btn btn-primary mb-3">Thêm mới blog</a>
+    <a href="/blog/add" class="btn btn-primary mb-3" th:text="#{blog.add}"></a>
 
     <!--    <div th:each="blog, status : ${blogs.content}" class="card mb-4">-->
     <!--        <div class="card-body">-->
@@ -96,11 +104,11 @@
     <!--    <button id="loadMoreButton" class="btn btn-primary">Load More</button>-->
 
     <div>
-        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tiêu đề"/>
-        <button id="searchButton" class="btn btn-primary">Tìm kiếm</button>
+        <input type="text" id="searchInput" th:placeholder="#{search.placeholder}"/>
+        <button id="searchButton" class="btn btn-primary" th:text="#{searchTitle}"></button>
     </div>
     <div id="blogList"></div>
-    <button id="loadMoreButton" class="btn btn-secondary">Xem thêm</button>
+    <button id="loadMoreButton" class="btn btn-secondary" th:text="#{loadBlog}"></button>
 
 <!--    <a th:if="${blogs.hasPrevious()}" th:href="@{/blog(page=${blogs.number - 1},search=${searchTitle})}">Pre</a>-->
 <!--    <span th:text="${blogs.number +1}"></span>/<span th:text="${blogs.totalPages}"></span>-->
@@ -227,10 +235,10 @@
                                     <span>${blog.category ? blog.category.name : 'No Category'}</span>
                                     <h2 class="card-title">${blog.title}</h2>
                                     <p class="card-text">${blog.content}</p>
-                                    <a href="/blog/detail?id=${blog.id}" class="btn btn-info btn-sm">Chi tiết</a>
+                                    <a href="/blog/detail?id=${blog.id}" class="btn btn-info btn-sm" >Chi tiết</a>
                                     <a href="/blog/edit?id=${blog.id}" class="btn btn-warning btn-sm">Cập nhật</a>
                                     <a href="/blog/delete?id=${blog.id}" class="btn btn-danger btn-sm">Xóa</a>
-                                </div>
+                                 </div>
                             </div>
                         `;
                     });
