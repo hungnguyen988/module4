@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+<h1>Welcome, <span th:text="${username}"></span>!</h1>
+<p>Your token: <span th:text="${token}"></span></p>
+<!--<form th:action="@{/protected}" method="get">-->
+<!--  <input type="hidden" name="Authorization" th:value="'Bearer ' + ${token}">-->
+<!--  <button type="submit">Access Protected Resource</button>-->
+<!--</form>-->
+</body>
+</html>

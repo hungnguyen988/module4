@@ -1,7 +1,9 @@
 package com.example.demo.controller.blog;
 
 import com.example.demo.dto.BlogDTO;
+import com.example.demo.model.AppUser;
 import com.example.demo.model.Blog;
+import com.example.demo.repository.AppUserRepository;
 import com.example.demo.service.blog.IBlogService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,7 +41,7 @@ public class RestBlogController {
         Pageable pageable = PageRequest.of(currentPage, currentSize);
         Page<Blog> blogPage;
 
-        blogPage = blogService.findAllWithTitleFilter(title,pageable);
+        blogPage = blogService.findAllWithTitleFilter(title, pageable);
 
         if (blogPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -64,7 +67,7 @@ public class RestBlogController {
         Blog blog = new Blog();
         BeanUtils.copyProperties(blogDTO, blog);
         blogService.save(blog);
-        return new ResponseEntity<>("add success",HttpStatus.CREATED);
+        return new ResponseEntity<>("add success", HttpStatus.CREATED);
     }
 
     @GetMapping("/searchById/{id}")
@@ -78,13 +81,12 @@ public class RestBlogController {
     }
 
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
 
         if (blogService.findById(id) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
+        } else {
             blogService.deleteById(id);
             return new ResponseEntity<>("delete success", HttpStatus.NO_CONTENT);
         }
@@ -96,17 +98,20 @@ public class RestBlogController {
         if (blog == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            if (blogDTO.getTitle()!= null) {
+            if (blogDTO.getTitle() != null) {
                 blog.setTitle(blogDTO.getTitle());
             }
-            if (blogDTO.getContent()!= null) {
+            if (blogDTO.getContent() != null) {
                 blog.setContent(blogDTO.getContent());
             }
-            if (blogDTO.getCategory()!= null) {
+            if (blogDTO.getCategory() != null) {
                 blog.setCategory(blogDTO.getCategory());
             }
             return new ResponseEntity<>("update success", HttpStatus.OK);
         }
     }
+
+
+
 
 }
