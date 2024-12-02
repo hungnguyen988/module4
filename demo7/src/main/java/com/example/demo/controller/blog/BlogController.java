@@ -4,13 +4,17 @@ import com.example.demo.model.Blog;
 import com.example.demo.model.Category;
 import com.example.demo.service.blog.BlogService;
 import com.example.demo.service.category.ICategoryService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,7 +105,7 @@ public class BlogController {
     }
 
     @GetMapping("/userInfo")
-    public String userInfo(Model model, Principal principal) {
+    public String userInfo(HttpServletRequest request, Principal principal) {
 
         // Sau khi user login thanh cong se co principal
         String userName = principal.getName();
@@ -115,13 +119,27 @@ public class BlogController {
 //
 //        System.out.println("-----------------detail----------");
 //        System.out.println(userInfo);
-
-        return "userInfoPage";
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            return "userInfoPage";
+        } else if (request.isUserInRole("ROLE_USER")) {
+            return "userHome";
+        }else {
+            return "error";
+        }
     }
+
+//    @GetMapping("/logout")
+//    public String logout(){
+//        return "logout";
+//    }
+
 
     @GetMapping("/logout")
-    public String logout(){
-        return "logout";
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout";
     }
-
 }

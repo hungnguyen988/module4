@@ -116,35 +116,5 @@ public class RestBlogController {
         }
     }
 
-    // sử dụng jwt
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @GetMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AppUser user) {
-        AppUser userDb = appUserRepository.findByUserName(user.getUserName());
-
-        if (userDb.getUserName() != null && userDb.getEncrytedPassword().equals(user.getEncrytedPassword())) {
-            String token = jwtUtils.generateToken(user.getUserName());
-            return new ResponseEntity<>(token, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("token", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    @GetMapping("/profile")
-    public ResponseEntity<String> getUserProfile() {
-        // Lấy thông tin Authentication từ SecurityContext
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Lấy username từ Authentication (đã được bộ lọc JwtAuthFilter xử lý)
-        String username = authentication.getName();
-
-        return new ResponseEntity<>(username, HttpStatus.OK);
-    }
 
 }

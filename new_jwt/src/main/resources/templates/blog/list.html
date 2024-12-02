@@ -151,59 +151,6 @@
     });
 </script>
 
-<!--<script>-->
-<!--    let currentPage = 0;-->
-<!--    const pageSize = 5;-->
-
-<!--    $(document).ready(function () {-->
-<!--        function loadBlogs(page) {-->
-<!--            $.ajax({-->
-<!--                url: `http://localhost:8080/api/blog?page=${page}&size=${pageSize}`,-->
-<!--                method: "GET",-->
-<!--                success: function (response) {-->
-<!--                    console.log(response);-->
-<!--                    let content = '';-->
-<!--                    response.content.forEach((blog, index) => {-->
-<!--                        content += `-->
-<!--                            <div class="card mb-4">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h6 class="card-subtitle mb-2 text-muted">Blog number: ${index + 1}</h6>-->
-<!--                                    <span>${blog.createdAt}</span> |-->
-<!--                                    <span>${blog.category ? blog.category.name : 'No Category'}</span>-->
-<!--                                    <h2 class="card-title">${blog.title}</h2>-->
-<!--                                    <p class="card-text">${blog.content}</p>-->
-<!--                                    <a href="/blog/detail?id=${blog.id}" class="btn btn-info btn-sm">Chi tiết</a>-->
-<!--                                    <a href="/blog/edit?id=${blog.id}" class="btn btn-warning btn-sm">Cập nhật</a>-->
-<!--                                    <a href="/blog/delete?id=${blog.id}" class="btn btn-danger btn-sm">Xóa</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        `;-->
-<!--                    });-->
-<!--                    $("#blogList").append(content);-->
-
-<!--                    if (response.last) {-->
-<!--                        $("#loadMoreButton").hide();-->
-<!--                    } else {-->
-<!--                        $("#loadMoreButton").show();-->
-<!--                    }-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-
-<!--        // Gọi lần đầu tiên khi trang được tải-->
-<!--        loadBlogs(currentPage);-->
-
-<!--        // Xử lý sự kiện khi nhấn nút Load More-->
-<!--        $("#loadMoreButton").click(function () {-->
-<!--            currentPage++;-->
-<!--            loadBlogs(currentPage);-->
-<!--        });-->
-
-<!--        $("#search").click()-->
-
-<!--    });-->
-<!--</script>-->
-
 
 <script>
     let currentPage = 0;

@@ -11,6 +11,7 @@
 </head>
 <body>
 
+<!--<div th:insert="_header :: header"></div>-->
 <div class="container mt-5">
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
         <div class="collapse navbar-collapse">
@@ -73,35 +74,26 @@
     <!-- Button to add a new blog -->
     <a href="/blog/add" class="btn btn-primary mb-3" th:text="#{blog.add}"></a>
 
-    <!--    <div th:each="blog, status : ${blogs.content}" class="card mb-4">-->
-    <!--        <div class="card-body">-->
-    <!--            &lt;!&ndash; Blog number &ndash;&gt;-->
-    <!--            <h6 class="card-subtitle mb-2 text-muted">Blog number: <span th:text="${status.count}"></span></h6>-->
-    <!--            <span th:text="${blog.createdAt}"></span>|-->
-    <!--            <span th:text="${blog.getCategory() != null ? blog.getCategory().getName() : 'No Category'}"></span>-->
+<!--        <div th:each="blog, status : ${blogs.content}" class="card mb-4">-->
+<!--            <div class="card-body">-->
+<!--                &lt;!&ndash; Blog number &ndash;&gt;-->
+<!--                <h6 class="card-subtitle mb-2 text-muted">Blog number: <span th:text="${status.count}"></span></h6>-->
+<!--                <span th:text="${blog.createdAt}"></span>|-->
+<!--                <span th:text="${blog.getCategory() != null ? blog.getCategory().getName() : 'No Category'}"></span>-->
 
-    <!--            &lt;!&ndash; Blog title &ndash;&gt;-->
-    <!--            <h2 class="card-title" th:text="${blog.title}"></h2>-->
-    <!--            &lt;!&ndash; Blog content &ndash;&gt;-->
-    <!--            <p class="card-text" th:text="${blog.content}"></p>-->
+<!--                &lt;!&ndash; Blog title &ndash;&gt;-->
+<!--                <h2 class="card-title" th:text="${blog.title}"></h2>-->
+<!--                &lt;!&ndash; Blog content &ndash;&gt;-->
+<!--                <p class="card-text" th:text="${blog.content}"></p>-->
 
-    <!--            &lt;!&ndash; Action buttons &ndash;&gt;-->
-    <!--            <a th:href="@{/blog/detail(id=${blog.id})}" class="btn btn-info btn-sm">Chi tiết</a>-->
-    <!--            <a th:href="@{/blog/edit(id=${blog.id})}" class="btn btn-warning btn-sm">Cập nhật</a>-->
-    <!--            <a th:href="@{/blog/delete(id=${blog.id})}" class="btn btn-danger btn-sm">Xóa</a>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
-
-    <!--        <input type="text" id="searchTitle" name="title" placeholder="Nhập tiêu đề để tìm kiếm">-->
-    <!--        <button type="button" id="search" class="btn btn-primary">Tìm kiếm</button>-->
+<!--                &lt;!&ndash; Action buttons &ndash;&gt;-->
+<!--                <a th:href="@{/blog/detail(id=${blog.id})}" class="btn btn-info btn-sm">Chi tiết</a>-->
+<!--                <a th:href="@{/blog/edit(id=${blog.id})}" class="btn btn-warning btn-sm">Cập nhật</a>-->
+<!--                <a th:href="@{/blog/delete(id=${blog.id})}" class="btn btn-danger btn-sm">Xóa</a>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
-    <!--    <div id="blogList">-->
-    <!--        &lt;!&ndash; Danh sách các blog sẽ được tải và hiển thị ở đây &ndash;&gt;-->
-    <!--    </div>-->
-
-    <!--    <button id="loadMoreButton" class="btn btn-primary">Load More</button>-->
 
     <div>
         <input type="text" id="searchInput" th:placeholder="#{search.placeholder}"/>
@@ -114,6 +106,8 @@
 <!--    <span th:text="${blogs.number +1}"></span>/<span th:text="${blogs.totalPages}"></span>-->
 <!--    <a th:if="${blogs.hasNext()}" th:href="@{/blog(page=${blogs.number +1 },search=${searchTitle})}">Next</a>-->
 </div>
+
+<!--<th:block th:replace="_footer :: footer"></th:block>-->
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -150,59 +144,6 @@
         });
     });
 </script>
-
-<!--<script>-->
-<!--    let currentPage = 0;-->
-<!--    const pageSize = 5;-->
-
-<!--    $(document).ready(function () {-->
-<!--        function loadBlogs(page) {-->
-<!--            $.ajax({-->
-<!--                url: `http://localhost:8080/api/blog?page=${page}&size=${pageSize}`,-->
-<!--                method: "GET",-->
-<!--                success: function (response) {-->
-<!--                    console.log(response);-->
-<!--                    let content = '';-->
-<!--                    response.content.forEach((blog, index) => {-->
-<!--                        content += `-->
-<!--                            <div class="card mb-4">-->
-<!--                                <div class="card-body">-->
-<!--                                    <h6 class="card-subtitle mb-2 text-muted">Blog number: ${index + 1}</h6>-->
-<!--                                    <span>${blog.createdAt}</span> |-->
-<!--                                    <span>${blog.category ? blog.category.name : 'No Category'}</span>-->
-<!--                                    <h2 class="card-title">${blog.title}</h2>-->
-<!--                                    <p class="card-text">${blog.content}</p>-->
-<!--                                    <a href="/blog/detail?id=${blog.id}" class="btn btn-info btn-sm">Chi tiết</a>-->
-<!--                                    <a href="/blog/edit?id=${blog.id}" class="btn btn-warning btn-sm">Cập nhật</a>-->
-<!--                                    <a href="/blog/delete?id=${blog.id}" class="btn btn-danger btn-sm">Xóa</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        `;-->
-<!--                    });-->
-<!--                    $("#blogList").append(content);-->
-
-<!--                    if (response.last) {-->
-<!--                        $("#loadMoreButton").hide();-->
-<!--                    } else {-->
-<!--                        $("#loadMoreButton").show();-->
-<!--                    }-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-
-<!--        // Gọi lần đầu tiên khi trang được tải-->
-<!--        loadBlogs(currentPage);-->
-
-<!--        // Xử lý sự kiện khi nhấn nút Load More-->
-<!--        $("#loadMoreButton").click(function () {-->
-<!--            currentPage++;-->
-<!--            loadBlogs(currentPage);-->
-<!--        });-->
-
-<!--        $("#search").click()-->
-
-<!--    });-->
-<!--</script>-->
 
 
 <script>

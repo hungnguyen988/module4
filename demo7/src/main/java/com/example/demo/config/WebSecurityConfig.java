@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,6 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -21,8 +27,6 @@ public class WebSecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -41,16 +45,18 @@ public class WebSecurityConfig {
 
 
 
+
+
     // phân quyền
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //         cấu hình có thể logout
         http.csrf(AbstractHttpConfigurer::disable);
         // tạo token cho method post
-//        http.csrf(Customizer.withDefaults());
-//        http.csrf((csrf) -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                );
+        http.csrf(Customizer.withDefaults());
+        http.csrf((csrf) -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                );
         // các đường dẫn không phải login
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/", "/blog", "/api/blog","blog/login","blog/logout", "/logoutSuccessful", "/403","api/blog/login").permitAll());
@@ -64,25 +70,27 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/blog/userInfo", "/blog/delete","/blog/admin").hasAnyRole("USER", "ADMIN"));
         // cấu hình form login
-//        http.formLogin(form -> form
-//                .loginPage("/blog/login")
-//                .loginProcessingUrl("/process-login") // đường dẫn trùng với url form login
-//                .defaultSuccessUrl("/blog/userInfo")//
-//                .failureUrl("/blog/login")
-//                .usernameParameter("username")//trùng với tên trong form đăng nhập
-//                .passwordParameter("password")// trung với tên trong form đăng nhập
-//        );
+        http.formLogin(form -> form
+                .loginPage("/blog/login")
+                .loginProcessingUrl("/process-login") // đường dẫn trùng với url form login
+                .defaultSuccessUrl("/blog/userInfo")//
+                .failureUrl("/blog/login")
+                .usernameParameter("username")//trùng với tên trong form đăng nhập
+                .passwordParameter("password")// trung với tên trong form đăng nhập
+        );
         // cấu hình logout
         http.logout(form -> form.logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful"));
 
         // cấu hình trả về trang 403 khi không có quyền (role) truy cập
         http.exceptionHandling(ex -> ex.accessDeniedPage("/403"));
 
-        // cấu hình remember-me : lưu trạng thái đăng nhập khi tắt trình duyệt => mở lại không cần login
+//        // cấu hình remember-me : lưu trạng thái đăng nhập khi tắt trình duyệt => mở lại không cần login
 //        http.rememberMe(remember -> remember.tokenRepository(persistentTokenRepository()));
         return http.build();
 
     }
+
+
 
 
 
